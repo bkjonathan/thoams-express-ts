@@ -6,13 +6,22 @@ import * as http from "http";
 import cors from 'cors';
 import morganLogger from 'morgan';
 import {Utils} from "./utils/utils";
+import Container from "./libs/ioc-container";
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 const router = express.Router();
-const util = new Utils()
 
+// Create an instance of the IoC container
+const container = new Container();
+
+
+// Register the Utils class with the IoC container
+container.register('Utils', new Utils());
+
+// Get an instance of the Utils class from the IoC container
+const util = container.get('Utils') as Utils;
 
 app.set('trust proxy', true);
 app.use(cors());
