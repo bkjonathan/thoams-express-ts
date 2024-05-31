@@ -2,6 +2,9 @@ class Container{
     private services :{[key:string]:Object} = {};
 
     register(name:string, service:Object){
+        if (!name || !service) {
+            throw new Error('Service name and service object must be provided');
+        }
         this.services[name] = service;
     }
 
