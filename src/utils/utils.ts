@@ -126,7 +126,6 @@ export class Utils {
 
     setupRoutes(app: any): void {
         const routePath = path.join(__dirname, '../routes');
-        console.log('routePath', routePath)
         this.walkDir(routePath).map(function (file) {
             const router = require(file).default;
             const fileName = path.parse(file).name;
