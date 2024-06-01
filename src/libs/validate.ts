@@ -1,13 +1,17 @@
 import Joi from 'joi';
 import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS } from '../utils/constant';
+import { ZodSchema } from 'zod';
 
 export enum ValidationTarget {
   BODY = 'body',
   PARAMS = 'params',
   QUERY = 'query',
 }
-export function validate(schema: Joi.ObjectSchema, target: ValidationTarget) {
+export function validate(
+  schema: Joi.ObjectSchema,
+  target: ValidationTarget = ValidationTarget.BODY,
+) {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req[target]);
     if (error) {
@@ -18,5 +22,23 @@ export function validate(schema: Joi.ObjectSchema, target: ValidationTarget) {
     } else {
       next();
     }
+  };
+}
+
+export function validateZod(
+  schema: ZodSchema<any>,
+  target: ValidationTarget = ValidationTarget.BODY,
+) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const data = req[target];
+    const { error } = schema.safeParse(data);
+
+    if (error) {
+      res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .json({ message: error?.errors[0].message });
+    }
+
+    next();
   };
 }
