@@ -2,6 +2,7 @@ import Joi from 'joi';
 import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS } from '../utils/constant';
 import { ZodSchema } from 'zod';
+import { ERROR_RESPONSE } from '../utils/errors';
 
 export enum ValidationTarget {
   BODY = 'body',
@@ -34,9 +35,11 @@ export function validateZod(
     const { error } = schema.safeParse(data);
 
     if (error) {
+      const message = error?.errors[0].message;
+      console.log(error?.errors);
       res
         .status(HTTP_STATUS.BAD_REQUEST)
-        .json({ message: error?.errors[0].message });
+        .json({ ...(ERROR_RESPONSE[message] || message) });
     }
 
     next();
