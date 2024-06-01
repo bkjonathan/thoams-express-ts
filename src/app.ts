@@ -3,7 +3,7 @@ dotenv.config();
 
 import express from 'express';
 import { Utils } from './utils/utils';
-import { getContainer } from './libs/ioc.utils';
+import { containerResolve } from './libs/ioc.utils';
 import { setupMiddleware } from './libs/setup-middleware';
 import connectMongo from './libs/connect-mongo';
 
@@ -13,7 +13,7 @@ connectMongo();
 const router = express.Router();
 
 // Get an instance of the Utils class from the IoC container
-const util = getContainer<Utils>(Utils.name);
+const util = containerResolve<Utils>(Utils.name);
 
 app.set('trust proxy', true);
 setupMiddleware(app, router);

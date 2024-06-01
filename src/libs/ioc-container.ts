@@ -1,20 +1,30 @@
-class Container{
-    private services :{[key:string]:Object} = {};
+// src/libs/ioc-container.ts
+class Container {
+  private static instance: Container;
+  private services: Map<string, any> = new Map();
+  private constructor() {}
 
-    register(name:string, service:Object){
-        if (!name || !service) {
-            throw new Error('Service name and service object must be provided');
-        }
-        this.services[name] = service;
+  static getInstance() {
+    if (!Container.instance) {
+      Container.instance = new Container();
     }
+    return Container.instance;
+  }
 
-    get(name:string){
-        const service = this.services[name];
-        if(!service){
-            throw new Error(`Service ${name} not found`);
-        }
-        return service;
+  register(name: string, instance: Object) {
+    if (!name || !instance) {
+      throw new Error('Service name and service object must be provided');
     }
+    this.services.set(name, instance);
+  }
+
+  get(name: string) {
+    const service = this.services.get(name);
+    if (!service) {
+      throw new Error(`Service ${name} not found`);
+    }
+    return service;
+  }
 }
 
 export default Container;

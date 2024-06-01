@@ -3,7 +3,7 @@ import { IUser } from '../models/user.model';
 import UserModel from '../models/user.model';
 import { FilterQuery } from 'mongoose';
 
-export class UserRepository implements IRepository<IUser> {
+export default class UserRepository implements IRepository<IUser> {
   async create(data: IUser): Promise<IUser> {
     const newUser = new UserModel(data);
     return await newUser.save();
